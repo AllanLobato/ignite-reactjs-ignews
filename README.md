@@ -79,3 +79,4 @@ $ yarn dev
 
 ---
 
+By Allan Lobato
