@@ -1,0 +1,22 @@
+{
+  "uid": {
+    "__TYPE__": "UIDContent",
+    "value": "easy"
+  },
+  "title": {
+    "__TYPE__": "FieldContent",
+    "value": "bow",
+    "type": "Text"
+  },
+  "content": {
+    "__TYPE__": "StructuredTextContent",
+    "value": [
+      {
+        "type": "paragraph",
+        "content": {
+          "text": "Tempor id fugiat do elit sint exercitation incididunt deserunt labore cillum sint voluptate consectetur consequat nisi. Amet veniam qui in commodo eiusmod aliquip aute enim adipisicing do incididunt. Ad magna nulla sit irure nisi laborum tempor do eu commodo occaecat."
+        }
+      }
+    ]
+  }
+}
