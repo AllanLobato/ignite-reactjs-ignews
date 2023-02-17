@@ -17,7 +17,7 @@ Projeto desenvolvido com as seguintes tecnologias:
 - Next Auth (sistema de autenticação para realizar o sistema de login com as API Routes)
 - FaunaDB (banco de dados recomendado para funções Serveless)
 - Prismic CMS (plataforma de CMS que contém os conteúdos dos posts que serão consumidos no código com sua API)
-- Jest e Testing Library (framework e biblioteca para testes)
+
 
 ## 📖 Conceitos
 
@@ -35,14 +35,6 @@ Anotações de conceitos estudados:
 - JAMStack (JavaScript API Markup; conceito de aplicações completas que dependem menos de um back end)
 - CMS (Content Management System; projetos com painel de administração pronto e é possível criar conteúdo dentro; exemplo Wordpress. Drupal, Joomla, Magento)
 - Headless CMS (Painel de administração + API HTTP, GraphQL, SDK; exemplo Strapi, Ghost, Keystone, GraphCMS, Prismic CMS, Contentful, Shopify, Saleor)
-- Jest
-  - Mock (função que simula um funcionamento diferente do real para funcionalidades externas do código para a execução de testes)
-- Testing Library
-  - Testing Playground (função que gera uma URL com uma interface onde é possível ver todo o html gerado pelo componente e os exatos códigos possíveis para testar estes determinados componentes renderizados)
-    <img alt="testing-playground" title="testing-playground" src="./.github/testing-playground.png" />
-  - Coverage report (função que gera um relatório que exibe se os testes já feitos no projeto são suficientes e quais partes do código os testes feitos estão cobrindo e não estão cobrindo)
-    <img alt="coverage-report" title="coverage-report" src="./.github/coverage-report.png" />
-    <img alt="coverage-report-2" title="coverage-report-2" src="./.github/coverage-report-2.png" />
 
 ## 💻 Projeto
 
