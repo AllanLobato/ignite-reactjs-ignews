@@ -56,7 +56,7 @@ Você pode visualizar o layout do projeto através [desse link](https://www.figm
 
 ```bash
 # Abra um terminal e copie este repositório com o comando
-$ git clone https://github.com/FelipeBrenner/ignite-reactjs-ignews.git
+$ git clone https://github.com/AllanLobato/ignite-reactjs-ignews.git
 ```
 
 ```bash
@@ -66,7 +66,6 @@ $ cd ignite-reactjs-ignews
 # Crie um arquivo .env.local e coloque as variaveis de ambiente baseado no arquivo .env.example, o que
 # exige um certo conhecimento para criá-las e configurá-las em cada respectiva aplicação, Stripe,
 # GitHub, FaunaDB e Prismic
-# No projeto online que está disponível eu adicionei-as no próprio Vercel, por isso funciona lá
 $ cp .env.example .env.local
 
 # Instale as dependências
@@ -88,4 +87,3 @@ $ yarn dev
 
 ---
 
-Por Felipe Brenner
