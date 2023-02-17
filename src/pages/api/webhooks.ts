@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
 import Stripe from "stripe";
+
 import { stripe } from "../../services/stripe";
 import { saveSubscription } from "./_lib/manageSubscription";
 
@@ -20,13 +21,17 @@ export const config = {
   },
 };
 
+// events to be listened
 const relevantEvents = new Set([
   "checkout.session.completed",
   "customer.subscription.updated",
   "customer.subscription.deleted",
 ]);
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function webhooks(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
     const buf = await buffer(req);
     const secret = req.headers["stripe-signature"];
@@ -45,13 +50,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { type } = event;
 
-    console.log(type);
-
-    try {
-      if (relevantEvents.has(type)) {
+    if (relevantEvents.has(type)) {
+      try {
         switch (type) {
+          // subscriptions entity
           case "customer.subscription.updated":
-            break;
           case "customer.subscription.deleted":
             const subscription = event.data.object as Stripe.Subscription;
 
@@ -62,6 +65,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             );
 
             break;
+
+          // session entity
           case "checkout.session.completed":
             const checkoutSession = event.data
               .object as Stripe.Checkout.Session;
@@ -76,14 +81,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           default:
             throw new Error("Unhandled event.");
         }
+      } catch (err) {
+        console.log(err);
+        return res.status(400).json({ error: "Webhook handler failed." });
       }
-    } catch (err) {
-      return res.json({ error: "Webhook handler failed." });
     }
 
-    res.json({ received: true });
+    res.status(200).json({ received: true });
   } else {
     res.setHeader("Allow", "POST");
-    res.status(405).end("Method not allowed");
+    res.status(405).end("Method now allowed");
   }
-};
+}

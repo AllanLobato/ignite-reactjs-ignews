@@ -2,6 +2,8 @@
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 2rem;
+
+  // total height - heading
   height: calc(100vh - 5rem);
 
   display: flex;
@@ -42,5 +44,4 @@
   button {
     margin-top: 2.5rem;
   }
-
 }

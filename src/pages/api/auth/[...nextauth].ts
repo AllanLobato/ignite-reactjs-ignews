@@ -1,21 +1,31 @@
 import { query as q } from "faunadb";
+
 import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
+import GithubProvider from "next-auth/providers/github";
+
 import { fauna } from "../../../services/fauna";
 
 export default NextAuth({
+  secret: process.env.NEXTAUTH_URL,
   providers: [
-    Providers.GitHub({
+    GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      scope: "read:user",
+      authorization: {
+        params: {
+          scope: "read:user",
+        },
+      },
     }),
   ],
+
+  // function executed automatically when some action happens
   callbacks: {
-    async session(session) {
+    async session({ session }) {
       try {
         const userActiveSubscription = await fauna.query(
           q.Get(
+            // intersection = same user's ref and active status at the same time
             q.Intersection([
               q.Match(
                 q.Index("subscription_by_user_ref"),
@@ -45,8 +55,7 @@ export default NextAuth({
         };
       }
     },
-
-    async signIn(user, account, profile) {
+    async signIn({ user, account, profile }) {
       const { email } = user;
 
       try {
@@ -54,13 +63,20 @@ export default NextAuth({
           q.If(
             q.Not(
               q.Exists(
-                q.Match(q.Index("user_by_email"), q.Casefold(user.email))
+                q.Match(
+                  q.Index("user_by_email"),
+                  // esse email...
+                  q.Casefold(user.email)
+                )
               )
             ),
+            // create a user with this email
             q.Create(q.Collection("users"), { data: { email } }),
+            // otherwise, search the user by email
             q.Get(q.Match(q.Index("user_by_email"), q.Casefold(user.email)))
           )
         );
+
         return true;
       } catch {
         return false;

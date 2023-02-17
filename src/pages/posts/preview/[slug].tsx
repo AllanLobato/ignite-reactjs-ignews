@@ -1,11 +1,13 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useSession } from "next-auth/client";
-import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { RichText } from "prismic-dom";
 import { useEffect } from "react";
+
 import { getPrismicClient } from "../../../services/prismic";
+
 import styles from "../post.module.scss";
 
 interface PostPreviewProps {
@@ -18,7 +20,7 @@ interface PostPreviewProps {
 }
 
 export default function PostPreview({ post }: PostPreviewProps) {
-  const [session] = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function PostPreview({ post }: PostPreviewProps) {
           <div
             className={`${styles.postContent} ${styles.previewContent}`}
             dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+          ></div>
 
           <div className={styles.continueReading}>
             Wanna continue reading?
@@ -55,16 +57,23 @@ export default function PostPreview({ post }: PostPreviewProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: "blocking" };
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
+  // save slug
   const { slug } = params;
 
-  const prismic = getPrismicClient({});
+  // prismic client
+  const prismic = getPrismicClient();
 
-  const response = await prismic.getByUID("posts", String(slug), {});
+  // search for slug
+  const response = await prismic.getByUID<any>("posts", String(slug), {});
 
+  // data formatting
   const post = {
     slug,
     title: RichText.asText(response.data.title),
@@ -83,6 +92,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       post,
     },
-    redirect: 60 * 30, // 30 minutes
+    revalidate: 60 * 30, // 30 minutes
   };
 };

@@ -1,11 +1,12 @@
+import { stripe } from "./../../../services/stripe";
+import { fauna } from "./../../../services/fauna";
 import { query as q } from "faunadb";
-import { fauna } from "../../../services/fauna";
-import { stripe } from "../../../services/stripe";
 
+// save information on database
 export async function saveSubscription(
   subscriptionId: string,
   customerId: string,
-  createAction = false
+  createAction: boolean = false
 ) {
   const userRef = await fauna.query(
     q.Select(
@@ -14,10 +15,10 @@ export async function saveSubscription(
     )
   );
 
+  // retrieve all data from subscription
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
-  console.log(subscription);
-
+  // choosing only most important data to save on database
   const subscriptionData = {
     id: subscription.id,
     userId: userRef,
@@ -26,17 +27,23 @@ export async function saveSubscription(
   };
 
   if (createAction) {
+    // if it's a new subscription -> save on db
     await fauna.query(
-      q.Create(q.Collection("subscriptions"), { data: subscriptionData })
+      q.Create(q.Collection("subscriptions"), {
+        data: subscriptionData,
+      })
     );
   } else {
+    // if this subscription already exists -> search for ref and change data
     await fauna.query(
       q.Replace(
         q.Select(
           "ref",
           q.Get(q.Match(q.Index("subscription_by_id"), subscriptionId))
         ),
-        { data: subscriptionData }
+        {
+          data: subscriptionData,
+        }
       )
     );
   }
